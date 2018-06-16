@@ -1,54 +1,50 @@
-// Require Node Modules
-var express = require('express');
-var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-var logger = require('morgan'); // for debugging
 
-// Initialize Express for debugging & body parsing
+// Require our dependecies
+var express = require("express");
+var mongoose = require("mongoose");
+var dotenv = require('dotenv').config()
+var bluebird = require("bluebird");
+var bodyParser = require("body-parser");
+var routes = require("./routes/routes");
+var apiController = require('./controllers/apiController')
+
+// Set up a default port, configure mongoose, configure our middleware
+var PORT = process.env.PORT || 4000;
+mongoose.Promise = bluebird;
 var app = express();
-app.use(logger('dev'));
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(express.static(__dirname + "/build"));
 
+var db = process.env.MONGODB_URI || "mongodb://localhost/NYT-react";
 
-// Serve Static Content
-app.use(express.static(process.cwd() + '/public'));
-
-
-
-// Database Configuration with Mongoose
-// ---------------------------------------------------------------------------------------------------------------
-// Connect to localhost if not a production environment
-if(process.env.NODE_ENV == 'production'){
-  // Gotten using `heroku config | grep MONGODB_URI` command in Command Line
-  mongoose.connect('mongodb://heroku_kbdv0v69:860jh71jd1iu5m5639gjr0gg9l@ds129028.mlab.com:29028/heroku_kbdv0v69');
-}
-else{
-  mongoose.connect('mongodb://localhost/3000');
-}
-var db = mongoose.connection;
-
-// Show any Mongoose errors
-db.on('error', function(err) {
-  console.log('Mongoose Error: ', err);
+// Connect mongoose to our database
+mongoose.connect(db, function(error) {
+  if (error) {
+    console.error(error);
+  }
+  else {
+    console.log("mongoose connection is successful");
+  }
 });
 
-// Once logged in to the db through mongoose, log a success message
-db.once('open', function() {
-  console.log('Mongoose connection successful.');
+// enable CORS
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+  next();
 });
 
-// Import the Article model
-var Article = require('./models/Article.js');
-// ---------------------------------------------------------------------------------------------------------------
+app.use("/", routes);
 
-// Import Routes/Controller
-var router = require('./controllers/controller.js');
-app.use('/', router);
+app.post("/api/articles", apiController.create);
 
-// Launch App
-var port = process.env.PORT || 3000;
-app.listen(port, function(){
-  console.log('Running on port: ' + port);
+app.get("/api/articles", apiController.index);
+
+app.delete("/api/articles/:id", apiController.destroy);
+
+// Start the server
+app.listen(PORT, function() {
+  console.log("Now listening on port %s! Visit localhost:%s in your browser.", PORT, PORT);
 });
