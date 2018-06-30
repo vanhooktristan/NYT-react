@@ -1,7 +1,15 @@
 .jumbotron h1 {
   font-size: 32px;
+  color: white;
+  
+  
 }
 
 .jumbotron h2 {
   font-size: 26px;
+  color: blue;
+}
+
+.jumbotron {
+  background-image: url('https://static.dezeen.com/uploads/2017/04/times-square-new-york-redesign-pedestrian-area-snohetta-midtown-manhattan-opening_dezeen_hero-852x479.jpg');
 }
