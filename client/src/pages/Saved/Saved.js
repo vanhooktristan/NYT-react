@@ -37,10 +37,10 @@ class Saved extends Component {
           <Col size="md-12">
             <Jumbotron>
               <h1 className="text-center">
-                <strong>(ReactJS) New York Times Article Scrubber</strong>
+                <strong>(ReactJS) New York Times Article Search and Save</strong>
               </h1>
               <h2 className="text-center">
-                Search for and save articles of interest.
+                Search for and save articles for later.
               </h2>
             </Jumbotron>
           </Col>
@@ -64,7 +64,7 @@ class Saved extends Component {
                   ))}
                 </List>
               ) : (
-                <h2 className="text-center">No Saved Articles</h2>
+                <h2 className="text-center">Nothing Saved So Far</h2>
               )}
             </Card>
           </Col>
