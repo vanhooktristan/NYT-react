@@ -47,7 +47,7 @@ class Saved extends Component {
         </Row>
         <Row>
           <Col size="md-12">
-            <Card title="Saved Articles" icon="download">
+            <Card title="Saved Articles">
               {this.state.articles.length ? (
                 <List>
                   {this.state.articles.map(article => (

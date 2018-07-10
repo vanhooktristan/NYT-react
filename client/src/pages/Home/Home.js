@@ -66,7 +66,7 @@ class Home extends Component {
             </Jumbotron>
           </Col>
           <Col size="md-12">
-            <Card title="Query" icon="newspaper-o">
+            <Card title="Search">
               <Form
                 handleInputChange={this.handleInputChange}
                 handleFormSubmit={this.handleFormSubmit}
